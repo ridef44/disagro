@@ -14,50 +14,55 @@ const UserForm = ({ onChange }: { onChange: (userInfo: any) => void }) => {
     onChange({ nombre, apellidos, correo, fechaHora });
   }, [nombre, apellidos, correo, fechaHora]);
 
+
   // Renderiza el formulario para la entrada de datos del usuario
   return (
-    <div className="space-y-4">
+    <div className="space-y-6 h-full min-h-80 p-4">
       <div>
-        <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">Nombre:</label>
+        <label htmlFor="nombre" className="block text-md font-semibold text-gray-700">Nombre:</label>
         <input
           type="text"
           id="nombre"
           value={nombre}
+          placeholder="Introduzca su nombre "
           onChange={(e) => setNombre(e.target.value)} // Actualiza el estado del nombre cuando cambia el input
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          className=" text-sm mt-1 block w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
           required
         />
       </div>
       <div>
-        <label htmlFor="apellidos" className="block text-sm font-medium text-gray-700">Apellidos:</label>
+        <label htmlFor="apellidos" className="block text-md font-semibold text-gray-700">Apellidos:</label>
         <input
           type="text"
-          id="apellidos"
           value={apellidos}
+          placeholder="Introduzca sus apellidos "
+          id="apellidos"
           onChange={(e) => setApellidos(e.target.value)} // Actualiza el estado de los apellidos cuando cambia el input
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          className=" text-sm mt-1 block w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
           required
         />
       </div>
       <div>
-        <label htmlFor="correo" className="block text-sm font-medium text-gray-700">Correo electrónico:</label>
+        <label htmlFor="correo" className="block text-md font-semibold text-gray-700">Correo electrónico:</label>
         <input
           type="email"
-          id="correo"
           value={correo}
+          placeholder="Introduzca su correo"
+          id="correo"
           onChange={(e) => setCorreo(e.target.value)} // Actualiza el estado del correo electrónico cuando cambia el input
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          className=" text-sm mt-1 block w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
           required
         />
       </div>
       <div>
-        <label htmlFor="fechaHora" className="block text-sm font-medium text-gray-700">Fecha y Hora:</label>
+        <label htmlFor="fechaHora" className="block text-md font-semibold text-gray-700">Fecha y Hora de Asistencia:</label>
         <input
           type="datetime-local"
           id="fechaHora"
+          placeholder="Fecha y hora que asistirá "
           value={fechaHora}
           onChange={(e) => setFechaHora(e.target.value)} // Actualiza el estado de la fecha y hora cuando cambia el input
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          className=" text-sm mt-1 block w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
           required
         />
       </div>
@@ -65,5 +70,4 @@ const UserForm = ({ onChange }: { onChange: (userInfo: any) => void }) => {
   );
 };
 
-// Exporta el componente para su uso en otros lugares de la aplicación
 export default UserForm;

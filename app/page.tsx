@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import UserForm from '../components/UserForm'; // Importa el formulario de usuario
 import ProductSelectionForm from '../components/ProductSelectionForm'; // Importa el formulario de selección de productos
+import Header from '@/components/header';
+import Footer from '@/components/footer';
 import axios from 'axios'; // Importa axios para realizar solicitudes HTTP
 
 // Importa el CSS de react-toastify para los estilos
@@ -148,49 +150,67 @@ const Home = () => {
 
     } catch (error) {
       console.error('Error al registrar la información:', error);
-      toast.error('Hubo un error al registrar la información. Por favor, verifica los registros para más detalles.');
+      toast.warning('El correo ingresado ya se encuentra registrado.');
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">Evento de Promociones Anuales</h1>
-      <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          <div className="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">1. Ingrese su información</h2>
-            <UserForm onChange={handleUserInfoChange} />
-          </div>
-          <div className="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">2. Seleccione Servicios y Productos de su interés</h2>
-            
-            {/* Renderiza el formulario de productos*/}
-            <ProductSelectionForm
+   
+  
+    <div className="bg-gray-100">
+      <Header />
+      <div className="container mx-auto px-4 py-8 my-20">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="flex flex-col items-center lg:flex-row lg:justify-center lg:items-stretch gap-8">
+            <div className="w-full lg:w-5/12 bg-white p-6 rounded-lg shadow-lg flex flex-col h-full">
+              <h2 className="text-lg font-semibold text-gray-700 mb-4 flex">
+
+              <div className="w-10 h-10 bg-green-600 text-white flex items-center justify-center rounded-full mr-4">
+                  1
+                </div>
+                Ingrese su información</h2>
+              <UserForm onChange={handleUserInfoChange} />
+            </div>
+            <div className="w-full lg:w-5/12 bg-white p-6 rounded-lg shadow-lg flex flex-col h-full">
+              <h2 className="text-lg font-semibold text-gray-700 mb-4 flex ">
+                
+              <div className="w-10 h-10 bg-green-600 text-white flex items-center justify-center rounded-full mr-4">
+                  2
+                </div>
+                
+                Seleccione Servicios y Productos de su interés</h2>
+              <ProductSelectionForm
                 products={products}
                 onSelectionChange={handleProductSelectionChange}
                 discountMessage={discountMessage}
                 totalBeforeDiscount={totalBeforeDiscount}
               />
-
-
+            </div>
           </div>
+
+          <div className="flex justify-end mt-4">
+            <button
+              type="submit"
+              className="py-2 px-4 bg-green-800 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75"
+            >
+              CONFIRMAR ASISTENCIA
+            </button>
+          </div>
+        </form>
+        <div className="text-right mt-2">
+          <span className="text-xl font-bold text-green-700">Total: Q. {totalPrice.toFixed(2)}</span>
+          <p className="text-red-600">Total Sin Descuento: Q. {totalBeforeDiscount.toFixed(2)}</p>
         </div>
-        <div className="text-right">
-          <span className="text-xl font-bold">Total: Q. {totalPrice.toFixed(2)}</span>
-          <p>Total Sin Descuento: Q. {totalBeforeDiscount.toFixed(2)}</p>  
-        </div>
-        <div className="flex justify-center mt-8">
-          <button
-            type="submit"
-            className="py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75"
-          >
-            Enviar Información Completa
-          </button>
-        </div>
-      </form>
-      <ToastContainer />
+        
+
+        <ToastContainer />
+      </div>
+      <Footer />
+      
     </div>
+   
   );
 };
+
 
 export default Home;

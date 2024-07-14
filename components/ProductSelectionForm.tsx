@@ -1,6 +1,7 @@
 // Importa los hooks useState y useEffect de React
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { FaSearch } from 'react-icons/fa';
 
 // Define la interfaz de un producto utilizando TypeScript (tipado estático)
 interface Product {
@@ -61,36 +62,38 @@ const ProductSelectionForm = ({
 
   // Renderiza el formulario de selección de productos
   return (
-    <div className="space-y-4">
-      <div>
+    <div className="space-y-4 flex flex-col h-full">
+      
+      {/*Input de busqueda*/}
+      <div className="relative">
         <input
           type="text"
           placeholder="Buscar Servicios y Productos"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-sm"
         />
+        <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-zinc-800" />
       </div>
+       {/*Input de busqueda*/}
    
-      <div className="space-y-2">
+      <div className="space-y-2 flex-grow min-h-80 max-h-80 overflow-y-auto">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div key={product.id} className={`p-2 border-b border-gray-200 rounded-lg ${selectedProducts.includes(product.id) ? "bg-gray-100" : ""}`}>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center text-sm">
                 <label className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    className="form-checkbox rounded text-indigo-500"
+                    className="form-checkbox rounded text-green-800"
                     checked={selectedProducts.includes(product.id)}
                     onChange={() => handleCheckboxChange(product.id)}
                   />
-                  <span className="text-gray-700">-{product.type}-</span>
+                  <span className="text-gray-700 font-semibold uppercase">{product.type}:</span>
                   <span className="text-gray-700">{product.name}</span>
                 </label>
                 <span className="text-gray-700 font-semibold">Q. {product.price.toFixed(2)}</span>
               </div>
-            
-              
             </div>
           ))
         ) : (
@@ -99,15 +102,15 @@ const ProductSelectionForm = ({
       </div>
       
       {discountMessage && (
-  <div className="text-sm font-medium text-green-600 bg-green-100 border-l-4 border-green-500 p-2 rounded">
-    {discountMessage.split('\n').map((line, index) => (
-      <React.Fragment key={index}>
-        {line}
-        <br />
-      </React.Fragment>
-    ))}
-  </div>
-)}
+        <div className="text-sm font-medium text-green-600 bg-green-100 border-l-4 border-green-500 rounded pl-2">
+          {discountMessage.split('\n').map((line, index) => (
+            <React.Fragment key={index}>
+              {line}
+              <br />
+            </React.Fragment>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
