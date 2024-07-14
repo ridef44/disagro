@@ -1,10 +1,18 @@
-"use client";
+"use client"; // Indica que este componente se ejecuta en el cliente
 
 import React, { useState, useEffect } from 'react';
-import UserForm from '../components/UserForm';
-import ProductSelectionForm from '../components/ProductSelectionForm';
-import axios from 'axios';
+import UserForm from '../components/UserForm'; // Importa el formulario de usuario
+import ProductSelectionForm from '../components/ProductSelectionForm'; // Importa el formulario de selección de productos
+import axios from 'axios'; // Importa axios para realizar solicitudes HTTP
 
+// Importa el CSS de react-toastify para los estilos
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+
+//Para uso de rutas
+import { useRouter } from 'next/navigation';
+
+// Define la interfaz para los productos
 interface Product {
   id: number;
   name: string;
@@ -12,48 +20,97 @@ interface Product {
   availability: boolean;
   createdAt: string;
   updatedAt: string;
+  type: string;  // 'producto' o 'servicio'
 }
 
 const Home = () => {
+  // Define los estados para la información del usuario, productos seleccionados, precio total y la lista de productos
   const [userInfo, setUserInfo] = useState<any>(null);
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [products, setProducts] = useState<Product[]>([]);
 
+  const router = useRouter();
+
+  // useEffect para obtener los productos de la API cuando el componente se monta
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:4000/api/products');
-        setProducts(response.data.data);
+        setProducts(response.data.data); // Actualiza el estado de productos con los datos obtenidos
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching products:", error); // Manejo de errores
       }
     };
 
     fetchProducts();
   }, []);
 
+  // Maneja los cambios en la información del usuario
   const handleUserInfoChange = (info: any) => {
     setUserInfo(info);
   };
 
+
+  const [discountMessage, setDiscountMessage] = useState("");
+  const [totalBeforeDiscount, setTotalBeforeDiscount] = useState<number>(0);  
+  
   const handleProductSelectionChange = (selected: number[]) => {
     setSelectedProducts(selected);
-    const total = selected.reduce((sum, productId) => {
-      const product = products.find(p => p.id === productId);
-      return sum + (product ? product.price : 0);
-    }, 0);
-    setTotalPrice(total);
+    const selectedItems = products.filter(p => selected.includes(p.id));
+  
+    const totalServices = selectedItems.filter(p => p.type === 'servicio');
+    const totalProducts = selectedItems.filter(p => p.type === 'producto');
+  
+    let total = 0;
+    let totalDiscountPercentage = 0; // Acumulador para el porcentaje de descuento
+    let message = "";
+  
+    // Cálculo para servicios
+    if (totalServices.length >= 2) {
+      const totalPriceServices = totalServices.reduce((acc, curr) => acc + curr.price, 0);
+      if (totalPriceServices > 1500) {
+        totalDiscountPercentage += 0.05; // Sumar al descuento total
+        message += "5% de descuento por más de Q.1,500 en servicios. \n";
+      } else {
+        totalDiscountPercentage += 0.03; // Sumar al descuento total
+        message += "3% de descuento por seleccionar 2 o más servicios. \n";
+      }
+      total += totalPriceServices;
+    }
+  
+    // Cálculo para productos
+    if (totalProducts.length >= 5) {
+      totalDiscountPercentage += 0.05; // Sumar al descuento total
+      message += "5% de descuento por seleccionar 5 o más productos. \n";
+    } else if (totalProducts.length >= 3) {
+      totalDiscountPercentage += 0.03; // Sumar al descuento total
+      message += "3% de descuento por seleccionar 3 o más productos. \n";
+    }
+    total += totalProducts.reduce((acc, curr) => acc + curr.price, 0);
+  
+    // Asegúrate de que el descuento total no exceda el 10%
+    totalDiscountPercentage = Math.min(totalDiscountPercentage, 0.10);
+  
+    // Guarda el total antes de aplicar el descuento
+    setTotalBeforeDiscount(total);
+  
+    // Aplicar el descuento acumulado
+    const discountedTotal = total * (1 - totalDiscountPercentage);
+    setTotalPrice(discountedTotal);
+    setDiscountMessage(message);
   };
+  
 
+  // Maneja el envío del formulario
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    // Verifica si la información del usuario y los productos seleccionados están completos
     if (!userInfo || selectedProducts.length === 0) {
-      alert('Por favor, complete toda la información y seleccione al menos un producto.');
+      toast.info('Por favor, complete toda la información y seleccione al menos un producto.');
       return;
     }
-
     try {
       // Crear usuario
       const userResponse = await axios.post('http://localhost:4000/api/usuarios', {
@@ -71,16 +128,27 @@ const Home = () => {
       });
       const asistenciaId = asistenciaResponse.data.data.id;
 
-      // Registrar productos
-      await axios.post('http://localhost:4000/api/asistenciaProductos', {
-        asistenciaId,
-        productos: selectedProducts
-      });
+      // Registrar productos seleccionados
+      for (const productoId of selectedProducts) {
+        console.log(`Enviando producto con ID ${productoId} para la asistencia con ID ${asistenciaId}`);
+        await axios.post('http://localhost:4000/api/seleccionProducto', {
+          asistenciaId,
+          productoId
+        });
+      }
 
-      alert('Información registrada con éxito');
+      toast.success('Información registrada con éxito');
+
+      setTimeout(() => {
+        router.push('/success'); // Redirige a la página de éxito después de 2 segundos
+      }, 4000);
+
+
+
+
     } catch (error) {
       console.error('Error al registrar la información:', error);
-      alert('Hubo un error al registrar la información. Por favor, verifica los registros para más detalles.');
+      toast.error('Hubo un error al registrar la información. Por favor, verifica los registros para más detalles.');
     }
   };
 
@@ -95,11 +163,21 @@ const Home = () => {
           </div>
           <div className="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-semibold text-gray-700 mb-4">2. Seleccione Servicios y Productos de su interés</h2>
-            <ProductSelectionForm products={products} onSelectionChange={handleProductSelectionChange} />
+            
+            {/* Renderiza el formulario de productos*/}
+            <ProductSelectionForm
+                products={products}
+                onSelectionChange={handleProductSelectionChange}
+                discountMessage={discountMessage}
+                totalBeforeDiscount={totalBeforeDiscount}
+              />
+
+
           </div>
         </div>
         <div className="text-right">
           <span className="text-xl font-bold">Total: Q. {totalPrice.toFixed(2)}</span>
+          <p>Total Sin Descuento: Q. {totalBeforeDiscount.toFixed(2)}</p>  
         </div>
         <div className="flex justify-center mt-8">
           <button
@@ -110,6 +188,7 @@ const Home = () => {
           </button>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 };
