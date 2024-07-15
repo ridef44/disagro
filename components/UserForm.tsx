@@ -1,21 +1,20 @@
-// Importa los hooks useState y useEffect de React
 import React, { useState, useEffect } from 'react';
 
-// Componente UserForm que recibe una función onChange como prop para comunicar cambios al componente padre
 const UserForm = ({ onChange }: { onChange: (userInfo: any) => void }) => {
-  // Estados para manejar los valores de los campos del formulario de usuario
+
+  // manejar los valores de los campos del formulario de usuario -Estados-
   const [nombre, setNombre] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [correo, setCorreo] = useState('');
   const [fechaHora, setFechaHora] = useState('');
 
-  // Efecto para emitir cambios en la información del usuario al componente padre cada vez que se modifica algún campo
+  // cambios en la información del usuario al componente padre cada vez que se modifica algún campo
   useEffect(() => {
     onChange({ nombre, apellidos, correo, fechaHora });
   }, [nombre, apellidos, correo, fechaHora]);
 
 
-  // Renderiza el formulario para la entrada de datos del usuario
+ 
   return (
     <div className="space-y-6 h-full min-h-80 p-4">
       <div>
@@ -25,7 +24,7 @@ const UserForm = ({ onChange }: { onChange: (userInfo: any) => void }) => {
           id="nombre"
           value={nombre}
           placeholder="Introduzca su nombre "
-          onChange={(e) => setNombre(e.target.value)} // Actualiza el estado del nombre cuando cambia el input
+          onChange={(e) => setNombre(e.target.value)} 
           className=" text-sm mt-1 block w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
           required
         />
@@ -37,7 +36,7 @@ const UserForm = ({ onChange }: { onChange: (userInfo: any) => void }) => {
           value={apellidos}
           placeholder="Introduzca sus apellidos "
           id="apellidos"
-          onChange={(e) => setApellidos(e.target.value)} // Actualiza el estado de los apellidos cuando cambia el input
+          onChange={(e) => setApellidos(e.target.value)} 
           className=" text-sm mt-1 block w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
           required
         />
@@ -49,7 +48,7 @@ const UserForm = ({ onChange }: { onChange: (userInfo: any) => void }) => {
           value={correo}
           placeholder="Introduzca su correo"
           id="correo"
-          onChange={(e) => setCorreo(e.target.value)} // Actualiza el estado del correo electrónico cuando cambia el input
+          onChange={(e) => setCorreo(e.target.value)} 
           className=" text-sm mt-1 block w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
           required
         />
@@ -61,7 +60,7 @@ const UserForm = ({ onChange }: { onChange: (userInfo: any) => void }) => {
           id="fechaHora"
           placeholder="Fecha y hora que asistirá "
           value={fechaHora}
-          onChange={(e) => setFechaHora(e.target.value)} // Actualiza el estado de la fecha y hora cuando cambia el input
+          onChange={(e) => setFechaHora(e.target.value)} 
           className=" text-sm mt-1 block w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
           required
         />

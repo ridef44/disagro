@@ -1,17 +1,17 @@
-"use client"; // Indica que este componente se ejecuta en el cliente
-
+"use client"; 
 import React, { useState, useEffect } from 'react';
-import UserForm from '../components/UserForm'; // Importa el formulario de usuario
-import ProductSelectionForm from '../components/ProductSelectionForm'; // Importa el formulario de selección de productos
+import UserForm from '../components/UserForm'; 
+import ProductSelectionForm from '../components/ProductSelectionForm'; 
 import Header from '@/components/header';
 import Footer from '@/components/footer';
-import axios from 'axios'; // Importa axios para realizar solicitudes HTTP
 
-// Importa el CSS de react-toastify para los estilos
+import axios from 'axios';
+
+
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 
-//Para uso de rutas
+
 import { useRouter } from 'next/navigation';
 
 // Define la interfaz para los productos
@@ -22,7 +22,7 @@ interface Product {
   availability: boolean;
   createdAt: string;
   updatedAt: string;
-  type: string;  // 'producto' o 'servicio'
+  type: string;  
 }
 
 const Home = () => {
@@ -35,14 +35,15 @@ const Home = () => {
   const router = useRouter();
 
 
-  // useEffect para obtener los productos de la API cuando el componente se monta
+  //Listar productos
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products`);
-        setProducts(response.data.data); // Actualiza el estado de productos con los datos obtenidos
+         // Actualiza el estado de productos 
+        setProducts(response.data.data);
       } catch (error) {
-        console.error("Error fetching products:", error); // Manejo de errores
+        console.error("Error fetching products:", error); 
       }
     };
 
@@ -66,17 +67,17 @@ const Home = () => {
     const totalProducts = selectedItems.filter(p => p.type === 'producto');
   
     let total = 0;
-    let totalDiscountPercentage = 0; // Acumulador para el porcentaje de descuento
+    let totalDiscountPercentage = 0; 
     let message = "";
   
     // Cálculo para servicios
     if (totalServices.length >= 2) {
       const totalPriceServices = totalServices.reduce((acc, curr) => acc + curr.price, 0);
       if (totalPriceServices > 1500) {
-        totalDiscountPercentage += 0.05; // Sumar al descuento total
+        totalDiscountPercentage += 0.05; 
         message += "5% de descuento por más de Q.1,500 en servicios. \n";
       } else {
-        totalDiscountPercentage += 0.03; // Sumar al descuento total
+        totalDiscountPercentage += 0.03; 
         message += "3% de descuento por seleccionar 2 o más servicios. \n";
       }
       total += totalPriceServices;
@@ -84,15 +85,15 @@ const Home = () => {
   
     // Cálculo para productos
     if (totalProducts.length >= 5) {
-      totalDiscountPercentage += 0.05; // Sumar al descuento total
+      totalDiscountPercentage += 0.05; 
       message += "5% de descuento por seleccionar 5 o más productos. \n";
     } else if (totalProducts.length >= 3) {
-      totalDiscountPercentage += 0.03; // Sumar al descuento total
+      totalDiscountPercentage += 0.03; 
       message += "3% de descuento por seleccionar 3 o más productos. \n";
     }
     total += totalProducts.reduce((acc, curr) => acc + curr.price, 0);
   
-    // Asegúrate de que el descuento total no exceda el 10%
+    
     totalDiscountPercentage = Math.min(totalDiscountPercentage, 0.10);
   
     // Guarda el total antes de aplicar el descuento
@@ -143,7 +144,7 @@ const Home = () => {
       toast.success('Información registrada con éxito');
 
       setTimeout(() => {
-        router.push('/success'); // Redirige a la página de éxito después de 2 segundos
+        router.push('/success'); 
       }, 4000);
 
 

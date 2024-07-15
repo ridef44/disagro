@@ -60,7 +60,7 @@ const ProductSelectionForm = ({
     onSelectionChange(updatedSelectedProducts);
   };
 
-  // Renderiza el formulario de selección de productos
+
   return (
     <div className="space-y-4 flex flex-col h-full">
       
@@ -75,6 +75,7 @@ const ProductSelectionForm = ({
         />
         <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-zinc-800" />
       </div>
+      
        {/*Input de busqueda*/}
    
       <div className="space-y-2 flex-grow min-h-80 max-h-80 overflow-y-auto">
