@@ -1,4 +1,4 @@
-"use client"; // Indica que este componente se ejecuta en el cliente
+"use client"; 
 
 import React from 'react';
 import { FaSeedling } from "react-icons/fa";
@@ -8,7 +8,7 @@ const SuccessPage = () => {
   const router = useRouter();
 
   const handleReturnHome = () => {
-    router.push('/'); // Redirige a la página inicial
+    router.push('/');
   };
 
   return (
