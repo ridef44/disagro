@@ -34,11 +34,12 @@ const Home = () => {
 
   const router = useRouter();
 
+
   // useEffect para obtener los productos de la API cuando el componente se monta
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/products');
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products`);
         setProducts(response.data.data); // Actualiza el estado de productos con los datos obtenidos
       } catch (error) {
         console.error("Error fetching products:", error); // Manejo de errores
@@ -115,7 +116,7 @@ const Home = () => {
     }
     try {
       // Crear usuario
-      const userResponse = await axios.post('http://localhost:4000/api/usuarios', {
+      const userResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/usuarios`, {
         nombre: userInfo.nombre,
         apellidos: userInfo.apellidos,
         correo: userInfo.correo
@@ -123,7 +124,7 @@ const Home = () => {
       const usuarioId = userResponse.data.data.id;
 
       // Crear asistencia
-      const asistenciaResponse = await axios.post('http://localhost:4000/api/asistencias', {
+      const asistenciaResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/asistencias`, {
         usuarioId,
         fechaHora: userInfo.fechaHora,
         montoFinal: totalPrice
@@ -133,7 +134,7 @@ const Home = () => {
       // Registrar productos seleccionados
       for (const productoId of selectedProducts) {
         console.log(`Enviando producto con ID ${productoId} para la asistencia con ID ${asistenciaId}`);
-        await axios.post('http://localhost:4000/api/seleccionProducto', {
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/seleccionProducto`, {
           asistenciaId,
           productoId
         });
