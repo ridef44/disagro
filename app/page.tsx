@@ -70,18 +70,20 @@ const Home = () => {
     let totalDiscountPercentage = 0; 
     let message = "";
   
-    // Cálculo para servicios
-    if (totalServices.length >= 2) {
-      const totalPriceServices = totalServices.reduce((acc, curr) => acc + curr.price, 0);
-      if (totalPriceServices > 1500) {
-        totalDiscountPercentage += 0.05; 
-        message += "5% de descuento por más de Q.1,500 en servicios. \n";
-      } else {
-        totalDiscountPercentage += 0.03; 
-        message += "3% de descuento por seleccionar 2 o más servicios. \n";
-      }
-      total += totalPriceServices;
-    }
+// S total de los servicios, 
+const totalPriceServices = totalServices.reduce((acc, curr) => acc + curr.price, 0);
+total += totalPriceServices;  // Suma el total de los servicios al total general
+
+// Aplicar descuentos 
+if (totalServices.length >= 2) {
+  if (totalPriceServices > 1500) {
+    totalDiscountPercentage += 0.05;
+    message += "5% de descuento por más de Q.1,500 en servicios. \n";
+  } else {
+    totalDiscountPercentage += 0.03;
+    message += "3% de descuento por seleccionar 2 o más servicios. \n";
+  }
+}
   
     // Cálculo para productos
     if (totalProducts.length >= 5) {
